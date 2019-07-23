@@ -27,3 +27,4 @@ function generateHTML(data) {
     <p>${data.extract}</p>
   `;
 }
+btn.addEventListener('click', () => getJSON(astrosUrl));
