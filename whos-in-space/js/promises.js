@@ -4,7 +4,7 @@ const peopleList = document.getElementById('people');
 const btn = document.querySelector('button');
 
 function getJSON(url) {
-  return Promise( (resolve, reject) => {
+  return new Promise( (resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.onload = () => {
@@ -22,9 +22,10 @@ function getJSON(url) {
 }
 
 function getProfiles(json) {
-  json.people.map( person => {
-    getJSON(wikiUrl + person.name, generateHTML);      
+  const profiles = json.people.map( person => {
+    return getJSON(wikiUrl + person.name);      
   }); 
+  return profiles;
 }
 
 function generateHTML(data) {
@@ -39,6 +40,9 @@ function generateHTML(data) {
 }
 
 btn.addEventListener('click', (event) => {
-  getJSON(astrosUrl, getProfiles);
+  getJSON(astrosUrl)
+    .then(getProfiles)
+    .then( data => console.log(data) )
+    .catch( err => console.log(err) )
   event.target.remove();
 });
