@@ -9,6 +9,12 @@ async function getPeopleInSpace(url) {
   const peopleJSON = await peopleResponse.json();
   
   const profiles = peopleJSON.people.map( async (person) => {
+    if (person.name == 'Alexander Skvortsov') {
+      person.name = 'Aleksandr Skvortsov (cosmonaut)';
+    } 
+    else if (person.name == 'Andrew Morgan') {
+      person.name = 'Andrew R. Morgan';
+    }
     const craft = person.craft;
     const profileResponse = await fetch(wikiUrl + person.name);
     const profileJSON = await profileResponse.json();
