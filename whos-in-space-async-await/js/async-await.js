@@ -1,12 +1,20 @@
-const astrosUrl = 'http://api.open-notify.org/astros.json';
+const astrosUrl = 'http://api.owewpen-notify.org/astros.json';
 const wikiUrl = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
 const peopleList = document.getElementById('people');
 const btn = document.querySelector('button');
 
 // Handle all fetch requests
+async function getJSON(url) {
+  try {
+    const response = await fetch(url);
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getPeopleInSpace(url) {
-  const peopleResponse = await fetch(url);
-  const peopleJSON = await peopleResponse.json();
+  const peopleJSON = await getJSON(url);
   
   const profiles = peopleJSON.people.map( async (person) => {
     if (person.name == 'Alexander Skvortsov') {
@@ -16,8 +24,7 @@ async function getPeopleInSpace(url) {
       person.name = 'Andrew R. Morgan';
     }
     const craft = person.craft;
-    const profileResponse = await fetch(wikiUrl + person.name);
-    const profileJSON = await profileResponse.json();
+    const profileJSON = await getJSON(wikiUrl + person.name);
 
     return { ...profileJSON, craft };
   });
@@ -44,5 +51,9 @@ btn.addEventListener('click', (event) => {
   event.target.textContent = "Loading...";
   getPeopleInSpace(astrosUrl)
     .then(generateHTML)
+    .catch( e => {
+      peopleList.innerHTML = '<h3>Something went wrong...</h3>';
+      console.error(e);
+    })
     .finally( () => event.target.remove() );
 });
