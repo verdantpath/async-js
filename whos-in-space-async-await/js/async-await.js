@@ -40,10 +40,9 @@ function generateHTML(data) {
   });
 }
 
-btn.addEventListener('click', async (event) => {
+btn.addEventListener('click', (event) => {
   event.target.textContent = "Loading...";
-  event.target.remove();
-  const astros = await getPeopleInSpace(astrosUrl);
-  generateHTML(astros);
-  
+  getPeopleInSpace(astrosUrl)
+    .then(generateHTML)
+    .finally( () => event.target.remove() );
 });
